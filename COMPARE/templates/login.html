@@ -18,7 +18,7 @@
   <div class="alert fixed-top alert-danger m-5 d-none" role="alert">
     登入失敗! 請檢查帳號密碼是否正確，若無帳號請先註冊
   </div>
-  <div id="box" class="container-fluid p-5">
+  <div id="box" class="container-fluid align-items-center">
     <img src="/static/images/logo.png" alt="">
     <div class="input-group mb-3">
       <div class="input-group-prepend">
@@ -41,9 +41,11 @@
       </div>
         
       </div>
-      <hr/>
-      <a class="btn btn-block btn-social btn-github" href="{% url "social:begin" "github" %}"><span class="fa fa-github"></span> Github 登入</a>         
-      <a class="btn btn-block btn-social btn-google" href="{% url "social:begin" "google-oauth2" %}"><span class="fa fa-google"></span> Google 登入</a>   
+      <div>
+        <a class="btn btn-social btn-github" href="{% url "social:begin" "github" %}"><span class="fa fa-github"></span> Github 登入</a>         
+        <a class="btn btn-social btn-google" href="{% url "social:begin" "google-oauth2" %}"><span class="fa fa-google"></span> Google 登入</a>   
+  
+      </div>
     </div>
   </div>
   <script>
