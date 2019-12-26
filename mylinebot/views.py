@@ -47,13 +47,13 @@ def callback(request):
                             output += string
                         else:
                             line_bot_api.push_message(
-                                event.source.userId,
+                                event.source.user_id,
                                 TextSendMessage(text=output)
                             )
                             output = string
                         count = count + 1
                     line_bot_api.push_message(
-                        event.source.userId,
+                        event.source.user_id,
                         TextSendMessage(text=output)
                     )
         return HttpResponse()
