@@ -1,3 +1,6 @@
+import requests
+from .models import *
+from django.db import connection
 from django.shortcuts import render
 
 # Create your views here.
@@ -12,9 +15,7 @@ from linebot.models import MessageEvent, TextSendMessage
 # 這邊是Linebot的授權TOKEN(等等註冊LineDeveloper帳號會取得)，我們為DEMO方便暫時存在settings裡面存取，實際上使用的時候記得設成環境變數，不要公開在程式碼裡喔！
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
-from django.db import connection
-from .models import *
-import requests
+
 
 @csrf_exempt
 def callback(request):
@@ -34,16 +35,23 @@ def callback(request):
             if isinstance(event, MessageEvent):
                 url = 'http://localhost:8000/api/search'
                 str_list = []
-                d = { "value" : event.message.text}
+                output = ""
+                d = {"value": event.message.text}
                 r = requests.post(url, data=d)
-                data =  r.json()
-                if  len(data['result']) !=0:
+                data = r.json()
+                if len(data['result']) != 0:
                     count = 1
                     for i in data['result']:
-                        str_list.append("第"+ str(count) + "項商品 :" + i['model'])
+                        string = "第" + str(count) + "項商品 :" + i['model'] + '\n'
+                        if (len(output)+len(string) < 2000):
+                            output += string
+                        else:
+                            line_bot_api.reply_message(
+                                event.reply_token,
+                                TextSendMessage(text=output)
+                            )
+                            output = string
                         count = count + 1
-                    output = '\n'.join(str_list)
-
                     line_bot_api.reply_message(
                         event.reply_token,
                         TextSendMessage(text=output)
