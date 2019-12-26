@@ -51,8 +51,7 @@ def callback(request):
                             return HttpResponse()
                 user_stage[event.source.user_id] = {
                     'stage': 1,
-                    'time': time.time(),
-                    'value': ()
+                    'time': time.time()
                 }
                 url = 'http://localhost:8000/api/search'
                 output = ""
