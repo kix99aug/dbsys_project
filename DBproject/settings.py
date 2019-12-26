@@ -28,18 +28,13 @@ SOCIAL_AUTH_SECRET = 'dQliZph-hQ5P4hIxkp8Hrz0A'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-<<<<<<< HEAD
 
-ALLOWED_HOSTS = ['*']
-=======
 LINE_CHANNEL_ACCESS_TOKEN = "qTom/4bZpS64f0qneaQYWTuq4gLmqstnnIq2vZOsN4KLhUnc/ShWOJ+yHd2e04N/OD0t52nHOsaYL9if/q+mPEXfxJHcijTFe7X13sdcgMtw08ZJ+FwyWO8vpVhCGqCpFjTlKlXmWnJbDAzjTiMfjgdB04t89/1O/w1cDnyilFU="
 LINE_CHANNEL_SECRET = "14c9e6bf0b49a0119f0d6c05d3354bdd"
 ALLOWED_HOSTS = [
     "dblinebot.herokuapp.com",
     "127.0.0.1"
 ]
-
->>>>>>> 9fd1f58a51bddc77a790df8cfc9ee0f9f6a617d7
 
 # Application definition
 
@@ -51,11 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'COMPARE',
-<<<<<<< HEAD
     'social_django',
-=======
     'mylinebot'
->>>>>>> 9fd1f58a51bddc77a790df8cfc9ee0f9f6a617d7
 ]
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
