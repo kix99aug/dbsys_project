@@ -64,7 +64,7 @@ def api_search(req):
             'SELECT * FROM merchandise WHERE model LIKE "%{0}%"'.format(req.POST['value']))
         for merch in merchs:
             crawlinf = CrawlInf.objects.raw(
-                'SELECT * FROM crawl_inf WHERE mid="{0}"'.format(merch.id))
+                'SELECT * FROM crawl_inf WHERE mid="{0}" AND price>=(SELECT AVG(price) FROM crawl_inf WHERE mid="{0}") ORDER BY price'.format(merch.id))
             data = []
             for eachinf in crawlinf:
                 data.append({
@@ -80,6 +80,7 @@ def api_search(req):
             })
         return JsonResponse({'result': result})
 
+#data['result'].length == 0
 
 @csrf_exempt
 def api_login(request):
