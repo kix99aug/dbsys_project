@@ -46,14 +46,14 @@ def callback(request):
                         if (len(output)+len(string) < 2000):
                             output += string
                         else:
-                            line_bot_api.reply_message(
-                                event.reply_token,
+                            line_bot_api.push_message(
+                                event.source.userId,
                                 TextSendMessage(text=output)
                             )
                             output = string
                         count = count + 1
-                    line_bot_api.reply_message(
-                        event.reply_token,
+                    line_bot_api.push_message(
+                        event.source.userId,
                         TextSendMessage(text=output)
                     )
         return HttpResponse()
