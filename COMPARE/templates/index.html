@@ -7,16 +7,46 @@
   <script src="/static/javascripts/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="/static/stylesheets/bootstrap.min.css">
   <link rel='stylesheet' href='/static/stylesheets/index.css'>
-  <script defer="true">
-    $('button#searchbtn').click(evt=>{
-      evt.preventDefault()
-      console.log(evt)
-    })
-  </script>
 </head>
 
 <body>
-  <div class="sticky-top container-fluid flex">
+  <div id="log" class="col d-flex justify-content-end h-100">
+    <h4 class="inline-flex">您好，{{nickname}}
+      {% if logged %}
+      <script>
+        var logout = () => {
+          $.ajax({
+            url: '/logout'
+          }).done(() => {
+            window.location.href = '/'
+          })
+        }
+      </script>
+      <a href="#" onclick="logout()">登出</a>
+      {% else %}
+      <a href="/login">登入</a>
+      {%endif%}
+    </h4>
+  </div>
+
+  <div id="box" class="container-fluid">
+    <img src="/static/images/logo.png" class="w-100">
+    <form action="/search" method="GET" class="input-group">
+      <input id="searchbox" class="form-control text-light" type="search" aria-label="Search" name="value">
+      <select class="form-control col-2 text-light" style="text-align-last: center;" id="searchcata">
+        <option>類別</option>
+        <option>手機</option>
+        <option>筆電</option>
+        <option>電玩</option>
+        <option>相機</option>
+      </select>
+      <div class="input-group-append w-5">
+        <button id="searchbtn" class="btn btn-dark" type="submit"><img class="img-fluid" src="/static/images/search.png"
+            alt=""></button>
+      </div>
+    </form>
+  </div>
+  <!-- <div class="sticky-top container-fluid flex">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-light row" style="height: 100vh;">
       <a class="navbar-brand col" href="/"><img class="img-fluid" src="/static/images/logo.png" alt=""></a>
       <form action="/search" method="GET" class="input-group col-6 align-items-end">
@@ -46,7 +76,7 @@
         </h4>
       </div>
     </nav>
-  </div>
+  </div> -->
 </body>
 
 </html>
