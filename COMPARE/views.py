@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from django.db import connection
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse,HttpResponseRedirect
 from django.core import serializers
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
 import hashlib
+import json,string,random
+import requests
 
 
 def hash_code(s, salt='ivan'):  # 密碼加密
@@ -12,7 +14,6 @@ def hash_code(s, salt='ivan'):  # 密碼加密
     s = s + salt
     h.update(s.encode())
     return h.hexdigest()
-
 
 def index(request):
     nickname = "訪客"
@@ -22,6 +23,10 @@ def index(request):
         logged = True
     return render(request, 'index.html', {'nickname': nickname, 'logged': logged})
 
+def randomString(stringLength=10):
+    """Generate a random string of fixed length """
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(stringLength))
 
 def search(request):
     nickname = "訪客"
@@ -38,7 +43,7 @@ def logout(request):
 
 
 def login(request):
-    return render(request, 'test.html')
+    return render(request, 'login.html')
 
 
 def register(request):
@@ -96,6 +101,28 @@ def api_login(request):
         except:
             return JsonResponse({'result': False})
 
+@csrf_exempt
+def oauth_callback(request):
+    social = SocialAuthUsersocialauth.objects.raw('SELECT * from social_auth_usersocialauth where user_id="{0}"'.format(request.session['_auth_user_id']))
+    if not User.objects.filter(email = social[0].uid).exists():
+        r = json.loads(social[0].extra_data)
+        if social[0].provider == "google-oauth2":
+            authorization_header = {"Authorization": "OAuth %s" % r['access_token']}
+            res = requests.get("https://www.googleapis.com/oauth2/v3/userinfo",
+                   headers=authorization_header)
+            data = res.json()
+            User.objects.create(email=social[0].uid, password=randomString(), nickname=data['name'])
+        else:
+            authorization_header = {"Authorization": "token %s" % r['access_token']}
+            res = requests.get("https://api.github.com/user",
+                   headers=authorization_header)
+            data = res.json()
+            User.objects.create(email=social[0].uid, password=randomString(), nickname=data['name'])
+    user = User.objects.get(email=social[0].uid)
+    request.session['email'] = user.email
+    request.session['nickname'] = user.nickname
+    return HttpResponseRedirect('/')
+
 
 @csrf_exempt
 def api_register(request):
@@ -135,6 +162,7 @@ def api_comment_add(request):
                 result.append(
                     {'id': comment.id, 'uid': comment.uid, 'mid': comment.mid, 'content':  comment.content})
             return JsonResponse(result, safe=False, json_dumps_params={'ensure_ascii': False})
+
 
 
 @csrf_exempt

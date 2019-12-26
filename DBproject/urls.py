@@ -36,6 +36,8 @@ urlpatterns = [
     path('api/comment/add', views.api_comment_add),
     path('api/comment/update', views.api_comment_update),
     path('api/comment/delete', views.api_comment_delete),
+    path('oauth/callback',views.oauth_callback),
+    path('', include('social_django.urls', namespace='social')),
 
     path('accounts',include('allauth.urls')),
 ]

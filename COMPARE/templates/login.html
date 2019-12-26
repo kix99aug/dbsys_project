@@ -37,6 +37,13 @@
       <div class="input-group-append">
         <button type="button" class="btn btn-secondary btn-lg" id="register">註冊</button>
       </div>
+            <div class="input-group-append">
+            <button type="button" id="github_register">
+              <a href="{% url "social:begin" "github" %}">Github登陸</a>         
+              <a href="{% url "social:begin" "google-oauth2" %}">Google登陸</a>               
+            </button>
+      </div>
+
     </div>
   </div>
   <script>
@@ -66,6 +73,10 @@
     $('button#register').click(evt=>{
       window.location.href = "/register"
     })
+    $('button#github_register').click(evt=>{
+
+    })
+
   </script>
 </body>
 
