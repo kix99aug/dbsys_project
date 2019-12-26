@@ -60,7 +60,7 @@ def logout(request):
 
 
 def login(request):
-    return render(request, 'login.html')
+    return render(request, 'test.html')
 
 
 def register(request):
