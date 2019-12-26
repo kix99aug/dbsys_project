@@ -20,3 +20,24 @@ body {
 .btn {
   width: 20vw;
 }
+
+#searchbox , #searchcata , #searchbtn {
+  height: 7.5vh;
+  background:rgba(187, 166, 166, 0.75);
+  border: 3px rgba(255, 255, 255, 0.75) solid;
+}
+
+#searchbox {
+  border-right:0 ;
+  border-radius: 50px 0 0 50px;
+}
+
+#searchcata {
+  border-left: 0;
+  border-right: 0;
+}
+
+#searchbtn {
+  border-left: 0;
+  border-radius: 0 50px 50px 0;
+}
