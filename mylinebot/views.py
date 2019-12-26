@@ -37,7 +37,7 @@ def callback(request):
                 d = { "value" : event.message.text}
                 r = requests.post(url, data=d)
                 data =  r.json()
-                if  data['result'].length !=0:
+                if  len(data['result']) !=0:
                     count = 1
                     for i in data:
                         str_list.append("第"+ count + "項商品 :" + i.model)
