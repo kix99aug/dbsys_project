@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_views
 from COMPARE import views
 
 urlpatterns = [
@@ -34,5 +35,6 @@ urlpatterns = [
     path('api/search', views.api_search),
     path('api/comment/add', views.api_comment_add),
     path('api/comment/update', views.api_comment_update),
-    path('api/comment/delete', views.api_comment_delete)
+    path('api/comment/delete', views.api_comment_delete),
+    url(r'social-login/', include('social_django.urls', namespace='social'))
 ]

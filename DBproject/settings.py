@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOGIN_URL = '/social-login/'
 
 
 # Quick-start development settings - unsuitable for production
@@ -21,10 +22,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '9o_^k5*v7r=)jo(uwe9$97fv^6@tahz%cr5irl)pz=qyw61i6('
+SOCIAL_AUTH_KEY = '693475746728-9b2o51u72f832b0n0gclke3urigsp8em.apps.googleusercontent.com'
+SOCIAL_AUTH_SECRET = 'dQliZph-hQ5P4hIxkp8Hrz0A'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
 LINE_CHANNEL_ACCESS_TOKEN = "qTom/4bZpS64f0qneaQYWTuq4gLmqstnnIq2vZOsN4KLhUnc/ShWOJ+yHd2e04N/OD0t52nHOsaYL9if/q+mPEXfxJHcijTFe7X13sdcgMtw08ZJ+FwyWO8vpVhCGqCpFjTlKlXmWnJbDAzjTiMfjgdB04t89/1O/w1cDnyilFU="
 LINE_CHANNEL_SECRET = "14c9e6bf0b49a0119f0d6c05d3354bdd"
 ALLOWED_HOSTS = [
@@ -33,7 +37,6 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "35.201.254.214"
 ]
-
 
 # Application definition
 
@@ -45,8 +48,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'COMPARE',
+    'social_django',
     'mylinebot'
 ]
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
