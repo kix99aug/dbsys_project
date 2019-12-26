@@ -39,7 +39,7 @@ def callback(request):
                 data =  r.json()
                 if  len(data['result']) !=0:
                     count = 1
-                    for i in data:
+                    for i in data['result']:
                         str_list.append("第"+ str(count) + "項商品 :" + i['model'])
                         count = count + 1
                     output = '\n'.join(str_list)
