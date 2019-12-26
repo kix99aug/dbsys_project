@@ -33,7 +33,9 @@ LINE_CHANNEL_ACCESS_TOKEN = "qTom/4bZpS64f0qneaQYWTuq4gLmqstnnIq2vZOsN4KLhUnc/Sh
 LINE_CHANNEL_SECRET = "14c9e6bf0b49a0119f0d6c05d3354bdd"
 ALLOWED_HOSTS = [
     "dblinebot.herokuapp.com",
-    "127.0.0.1"
+    "localhost",
+    "127.0.0.1",
+    "35.201.254.214"
 ]
 
 # Application definition
