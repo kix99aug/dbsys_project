@@ -53,7 +53,7 @@ def callback(request):
                             data = user_stage[event.source.user_id]['data']['result'][idx]['data']
                             columns = []
                             for i in data:
-                                print(data)
+                                print(i)
                                 columns.append(CarouselColumn(thumbnail_image_url=data[i]['image_url'], title=data[i]['title'], text='$'+str(
                                     data[i]['price']), actions=[URITemplateAction(label='前往購買', uri=data[i]['url'])]))
                             line_bot_api.push_message(
