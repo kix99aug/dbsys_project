@@ -6,6 +6,7 @@ from .models import *
 from django.views.decorators.csrf import csrf_exempt
 import hashlib
 import json,string,random
+import requests
 
 
 def hash_code(s, salt='ivan'):  # 密碼加密
@@ -42,7 +43,7 @@ def logout(request):
 
 
 def login(request):
-    return render(request, 'test.html')
+    return render(request, 'login.html')
 
 
 def register(request):
@@ -101,15 +102,25 @@ def api_login(request):
             return JsonResponse({'result': False})
 
 @csrf_exempt
-def github_callback(request):
-    git_user = SocialAuthUsersocialauth.objects.raw('SELECT * from social_auth_usersocialauth where user_id="{0}"'.format(request.session['_auth_user_id']))
-    if not User.objects.filter(email = git_user[0].uid).exists():
-        r = json.loads(git_user[0].extra_data)
-        User.objects.create(email=git_user[0].uid, password=randomString(), nickname=r['login'])
-    else:
-        user = User.objects.get(email=git_user[0].uid)
-        request.session['email'] = user.email
-        request.session['nickname'] = user.nickname
+def oauth_callback(request):
+    social = SocialAuthUsersocialauth.objects.raw('SELECT * from social_auth_usersocialauth where user_id="{0}"'.format(request.session['_auth_user_id']))
+    if not User.objects.filter(email = social[0].uid).exists():
+        r = json.loads(social[0].extra_data)
+        if social[0].provider == "google-oauth2":
+            authorization_header = {"Authorization": "OAuth %s" % r['access_token']}
+            res = requests.get("https://www.googleapis.com/oauth2/v3/userinfo",
+                   headers=authorization_header)
+            data = res.json()
+            User.objects.create(email=social[0].uid, password=randomString(), nickname=data['name'])
+        else:
+            authorization_header = {"Authorization": "token %s" % r['access_token']}
+            res = requests.get("https://api.github.com/user",
+                   headers=authorization_header)
+            data = res.json()
+            User.objects.create(email=social[0].uid, password=randomString(), nickname=data['name'])
+    user = User.objects.get(email=social[0].uid)
+    request.session['email'] = user.email
+    request.session['nickname'] = user.nickname
     return HttpResponseRedirect('/')
 
 
