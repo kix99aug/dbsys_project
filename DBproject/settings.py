@@ -22,8 +22,8 @@ LOGIN_URL = '/social-login/'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '9o_^k5*v7r=)jo(uwe9$97fv^6@tahz%cr5irl)pz=qyw61i6('
-SOCIAL_AUTH_KEY = '693475746728-9b2o51u72f832b0n0gclke3urigsp8em.apps.googleusercontent.com'
-SOCIAL_AUTH_SECRET = 'dQliZph-hQ5P4hIxkp8Hrz0A'
+SOCIAL_AUTH_KEY = '14919125201-d0hkmp25fd43ebf91g209fsf5m0nt03d.apps.googleusercontent.com'
+SOCIAL_AUTH_SECRET = 'tXNP72KKjC7_lUz5_zKm_tQQ'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -43,18 +43,25 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'COMPARE',
-    'social_django',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+
     'mylinebot'
 ]
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 MIDDLEWARE = [
@@ -140,3 +147,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'COMPARE/templates/static'),
 ]
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/'
