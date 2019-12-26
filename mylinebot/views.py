@@ -43,7 +43,7 @@ def callback(request):
                     count = 1
                     for i in data['result']:
                         string = "第" + str(count) + "項商品 :" + i['model'] + '\n'
-                        if (len(output)+len(string) < 2000):
+                        if (len(output)+len(string) < 500):
                             output += string
                         else:
                             line_bot_api.push_message(
