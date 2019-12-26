@@ -131,6 +131,17 @@ class DjangoMigrations(models.Model):
         db_table = 'django_migrations'
 
 
+class DjangoRedirect(models.Model):
+    site = models.ForeignKey('DjangoSite', models.DO_NOTHING)
+    old_path = models.CharField(max_length=200)
+    new_path = models.CharField(max_length=200)
+
+    class Meta:
+        managed = False
+        db_table = 'django_redirect'
+        unique_together = (('site', 'old_path'),)
+
+
 class DjangoSession(models.Model):
     session_key = models.CharField(primary_key=True, max_length=40)
     session_data = models.TextField()
@@ -139,6 +150,15 @@ class DjangoSession(models.Model):
     class Meta:
         managed = False
         db_table = 'django_session'
+
+
+class DjangoSite(models.Model):
+    name = models.CharField(max_length=50)
+    domain = models.CharField(unique=True, max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'django_site'
 
 
 class Mark(models.Model):
@@ -175,6 +195,67 @@ class Shopee(models.Model):
     class Meta:
         managed = False
         db_table = 'shopee'
+
+
+class SocialAuthAssociation(models.Model):
+    server_url = models.CharField(max_length=255)
+    handle = models.CharField(max_length=255)
+    secret = models.CharField(max_length=255)
+    issued = models.IntegerField()
+    lifetime = models.IntegerField()
+    assoc_type = models.CharField(max_length=64)
+
+    class Meta:
+        managed = False
+        db_table = 'social_auth_association'
+        unique_together = (('server_url', 'handle'),)
+
+
+class SocialAuthCode(models.Model):
+    email = models.CharField(max_length=254)
+    code = models.CharField(max_length=32)
+    verified = models.BooleanField()
+    timestamp = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'social_auth_code'
+        unique_together = (('email', 'code'),)
+
+
+class SocialAuthNonce(models.Model):
+    server_url = models.CharField(max_length=255)
+    timestamp = models.IntegerField()
+    salt = models.CharField(max_length=65)
+
+    class Meta:
+        managed = False
+        db_table = 'social_auth_nonce'
+        unique_together = (('server_url', 'timestamp', 'salt'),)
+
+
+class SocialAuthPartial(models.Model):
+    token = models.CharField(max_length=32)
+    next_step = models.PositiveSmallIntegerField()
+    backend = models.CharField(max_length=32)
+    data = models.TextField()
+    timestamp = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'social_auth_partial'
+
+
+class SocialAuthUsersocialauth(models.Model):
+    provider = models.CharField(max_length=32)
+    uid = models.CharField(max_length=255)
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    extra_data = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'social_auth_usersocialauth'
+        unique_together = (('provider', 'uid'),)
 
 
 class User(models.Model):
