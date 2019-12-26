@@ -6,6 +6,8 @@
   <script src="/static/javascripts/jquery.min.js"></script>
   <script src="/static/javascripts/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="/static/stylesheets/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" crossorigin="anonymous"></link>
+  <link rel="stylesheet" href="/static/stylesheets/bootstrap-social.css">
   <link rel='stylesheet' href='/static/stylesheets/login.css'>
 </head>
 
@@ -16,7 +18,7 @@
   <div class="alert fixed-top alert-danger m-5 d-none" role="alert">
     登入失敗! 請檢查帳號密碼是否正確，若無帳號請先註冊
   </div>
-  <div id="box" class="container-fluid">
+  <div id="box" class="container-fluid p-5">
     <img src="/static/images/logo.png" alt="">
     <div class="input-group mb-3">
       <div class="input-group-prepend">
@@ -37,13 +39,11 @@
       <div class="input-group-append">
         <button type="button" class="btn btn-secondary btn-lg" id="register">註冊</button>
       </div>
-            <div class="input-group-append">
-            <button type="button" id="github_register">
-              <a href="{% url "social:begin" "github" %}">Github 登入</a>         
-              <a href="{% url "social:begin" "google-oauth2" %}">Google 登入</a>               
-            </button>
+        
       </div>
-
+      <hr/>
+      <a class="btn btn-block btn-social btn-github" href="{% url "social:begin" "github" %}"><span class="fa fa-github"></span> Github 登入</a>         
+      <a class="btn btn-block btn-social btn-google" href="{% url "social:begin" "google-oauth2" %}"><span class="fa fa-google"></span> Google 登入</a>   
     </div>
   </div>
   <script>

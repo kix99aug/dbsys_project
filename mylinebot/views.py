@@ -33,21 +33,23 @@ def callback(request):
                 if event.source.user_id in user_stage:
                     if time.time()-user_stage[event.source.user_id]['time'] <= 86400:
                         if user_stage[event.source.user_id]['stage'] == 1:
-                            idx = int(event.message.text)-1
-                            data = user_stage[event.source.user_id]['data']['result'][idx]['data']
-                            columns = []
-                            for i in range(len(data)):
-                                if i >= 3: break
-                                title = str(data[i]['title'])
-                                if len(title)>20:title = title[0:20]
-                                columns.append(CarouselColumn(thumbnail_image_url=data[i]['image_url'], title=title, text='$'+str(
-                                    data[i]['price']), actions=[URITemplateAction(label='前往購買', uri=data[i]['url'])]))
-                            line_bot_api.push_message(
-                                event.source.user_id,
-                                TemplateSendMessage(
-                                    alt_text="???", template=CarouselTemplate(columns=columns))
-                            )
-                            user_stage[event.source.user_id]['stage'] = 0
+                            try:
+                                idx = int(event.message.text)-1
+                                data = user_stage[event.source.user_id]['data']['result'][idx]['data']
+                                columns = []
+                                for i in range(len(data)):
+                                    if i >= 3: break
+                                    title = str(data[i]['title'])
+                                    if len(title)>20:title = title[0:20]
+                                    columns.append(CarouselColumn(thumbnail_image_url=data[i]['image_url'], title=title, text='$'+str(
+                                        data[i]['price']), actions=[URITemplateAction(label='前往購買', uri=data[i]['url'])]))
+                                line_bot_api.push_message(
+                                    event.source.user_id,
+                                    TemplateSendMessage(
+                                        alt_text="???", template=CarouselTemplate(columns=columns))
+                                )
+                            except:
+                                user_stage[event.source.user_id]['stage'] = 0
                             return HttpResponse()
                 user_stage[event.source.user_id] = {
                     'stage': 1,
