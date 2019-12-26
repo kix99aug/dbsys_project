@@ -1,3 +1,5 @@
+{% load socialaccount %}
+{% providers_media_js %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,10 +9,6 @@
     <title>Document</title>
 </head>
 <body>
-    <button type="button" class="btn btn-outline-success google">
-        <a href="{% url 'social:begin' 'google-oauth2' %}">
-        使用第三方 Google 登入</a>
-     </button>
-        &emsp; / &emsp;
+    <a href="{% provider_login_url 'google' %}"> Google Login !</a>
 </body>
 </html>
