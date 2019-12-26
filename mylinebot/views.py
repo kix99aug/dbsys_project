@@ -63,6 +63,7 @@ def callback(request):
                                 TemplateSendMessage(
                                     alt_text="請在手機上看唷", template=CarouselTemplate(columns=columns))
                             )
+                            user_stage[event.source.user_id]['stage'] = 0
                             return HttpResponse()
                 user_stage[event.source.user_id] = {
                     'stage': 1,
