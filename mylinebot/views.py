@@ -13,7 +13,7 @@ from linebot.models import MessageEvent, TextSendMessage, TemplateSendMessage, C
 import time
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
-user_stage = ()
+user_stage = {}
 
 @csrf_exempt
 def callback(request):
