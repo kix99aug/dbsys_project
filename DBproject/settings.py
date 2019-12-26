@@ -35,7 +35,8 @@ ALLOWED_HOSTS = [
     "dblinebot.herokuapp.com",
     "localhost",
     "127.0.0.1",
-    "35.201.254.214"
+    "35.201.254.214",
+    "compare.keybo.me"
 ]
 
 # Application definition

@@ -108,16 +108,14 @@ def oauth_callback(request):
         r = json.loads(social[0].extra_data)
         if social[0].provider == "google-oauth2":
             authorization_header = {"Authorization": "OAuth %s" % r['access_token']}
-            res = requests.get("https://www.googleapis.com/oauth2/v3/userinfo",
-                   headers=authorization_header)
-            data = res.json()
-            User.objects.create(email=social[0].uid, password=randomString(), nickname=data['name'])
+            url = "https://www.googleapis.com/oauth2/v3/userinfo"
         else:
             authorization_header = {"Authorization": "token %s" % r['access_token']}
-            res = requests.get("https://api.github.com/user",
-                   headers=authorization_header)
-            data = res.json()
-            User.objects.create(email=social[0].uid, password=randomString(), nickname=data['name'])
+            url = "https://api.github.com/user"
+        res = requests.get(url,
+                headers=authorization_header)
+        data = res.json()
+        User.objects.create(email=social[0].uid, password=randomString(), nickname=data['name'])
     user = User.objects.get(email=social[0].uid)
     request.session['email'] = user.email
     request.session['nickname'] = user.nickname
