@@ -14,29 +14,12 @@ def hash_code(s, salt='ivan'):  # 密碼加密
     h.update(s.encode())
     return h.hexdigest()
 
-# def index(request):
-#     if 'session' in request:
-#         if 'nickname' in request.session:
-#             nickname = request.session['nickname']
-#             logged = True
-#         else:
-#             nickname = "訪客"
-#             logged = False
-#     else:
-#         nickname = "訪客"
-#         logged = False
-#     return render(request, 'index.html', {'nickname': nickname, 'logged': logged})
 def index(request):
-    if 'session' in request:
-        if 'nickname' in request.session:
-            nickname = request.session['nickname']
-            logged = True
-        else:
-            nickname = "訪客"
-            logged = False
-    else:
-        nickname = "訪客"
-        logged = False
+    nickname = "訪客"
+    logged = False
+    if 'nickname' in request.session:
+        nickname = request.session['nickname']
+        logged = True
     return render(request, 'index.html', {'nickname': nickname, 'logged': logged})
 
 def randomString(stringLength=10):
@@ -45,16 +28,11 @@ def randomString(stringLength=10):
     return ''.join(random.choice(letters) for i in range(stringLength))
 
 def search(request):
-    if 'session' in request:
-        if 'nickname' in request.session:
-            nickname = request.session['nickname']
-            logged = True
-        else:
-            nickname = "訪客"
-            logged = False
-    else:
-        nickname = "訪客"
-        logged = False
+    nickname = "訪客"
+    logged = False
+    if 'nickname' in request.session:
+        nickname = request.session['nickname']
+        logged = True
     return render(request, 'search.html', {'nickname': nickname, 'logged': logged, 'value': request.GET['value']})
 
 
@@ -64,7 +42,7 @@ def logout(request):
 
 
 def login(request):
-    return render(request, 'login.html')
+    return render(request, 'test.html')
 
 
 def register(request):
@@ -73,7 +51,7 @@ def register(request):
 
 def comment(request):
     with connection.cursor() as c:
-        m = Merchandise.objects.raw("SELECT model,id from Merchandise")
+        m = Merchandise.objects.raw("SELECT model,id from Merchandise WHERE id={}".format(request.GET['id']))
         mm = m[0].model
         mId = m[0].id
         u = User.objects.raw("SELECT id from User")
@@ -90,11 +68,10 @@ def api_search(req):
             'SELECT * FROM merchandise WHERE model LIKE "%{0}%"'.format(req.POST['value']))
         for merch in merchs:
             crawlinf = CrawlInf.objects.raw(
-                'SELECT * FROM crawl_inf WHERE mid="{0}"'.format(merch.id))
+                'SELECT * FROM crawl_inf WHERE mid="{0}" AND price>=(SELECT AVG(price) FROM crawl_inf WHERE mid="{0}") ORDER BY price'.format(merch.id))
             data = []
             for eachinf in crawlinf:
                 data.append({
-                    'mid': eachinf.mid,
                     'url': eachinf.url,
                     'title': eachinf.title,
                     'price': eachinf.price,
@@ -102,10 +79,12 @@ def api_search(req):
                 })
             result.append({
                 'mid': merch.id,
+                'model': str(merch.model).upper(),
                 'data': data
             })
         return JsonResponse({'result': result})
 
+#data['result'].length == 0
 
 @csrf_exempt
 def api_login(request):

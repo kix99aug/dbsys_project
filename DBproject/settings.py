@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOGIN_URL = '/social-login/'
 
 
 # Quick-start development settings - unsuitable for production
@@ -21,18 +22,28 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '9o_^k5*v7r=)jo(uwe9$97fv^6@tahz%cr5irl)pz=qyw61i6('
+SOCIAL_AUTH_KEY = '14919125201-d0hkmp25fd43ebf91g209fsf5m0nt03d.apps.googleusercontent.com'
+SOCIAL_AUTH_SECRET = 'tXNP72KKjC7_lUz5_zKm_tQQ'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+LINE_CHANNEL_ACCESS_TOKEN = "qTom/4bZpS64f0qneaQYWTuq4gLmqstnnIq2vZOsN4KLhUnc/ShWOJ+yHd2e04N/OD0t52nHOsaYL9if/q+mPEXfxJHcijTFe7X13sdcgMtw08ZJ+FwyWO8vpVhCGqCpFjTlKlXmWnJbDAzjTiMfjgdB04t89/1O/w1cDnyilFU="
+LINE_CHANNEL_SECRET = "14c9e6bf0b49a0119f0d6c05d3354bdd"
+ALLOWED_HOSTS = [
+    "dblinebot.herokuapp.com",
+    "localhost",
+    "127.0.0.1",
+    "35.201.254.214"
+]
 
 # Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -41,7 +52,20 @@ INSTALLED_APPS = [
     "django.contrib.redirects",
     'COMPARE',
     'social_django',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+
+    'mylinebot'
 ]
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -130,6 +154,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'COMPARE/templates/static'),
 ]
 
+<<<<<<< HEAD
 
 
 
@@ -146,3 +171,8 @@ SOCIAL_AUTH_GITHUB_USE_OPENID_AS_USERNAME = True
 SOCIAL_AUTH_GITHUB_SCOPE =['']
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/github/callback' # 登陸成功之後的路由
+=======
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/'
+>>>>>>> 343a6db37773228723595b2e37309178a72df04d

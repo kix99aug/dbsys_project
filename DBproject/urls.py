@@ -16,11 +16,15 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_views
 from COMPARE import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index),
+
+    path('mylinebot/', include('mylinebot.urls')),
+
     path('search', views.search),
     path('login', views.login),
     path('logout', views.logout),
@@ -34,4 +38,6 @@ urlpatterns = [
     path('api/comment/delete', views.api_comment_delete),
     path('github/callback',views.github_callback),
     path('', include('social_django.urls', namespace='social'))
+
+    path('accounts',include('allauth.urls')),
 ]
