@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>首頁 - COMPARE</title>
+  <script src="/static/javascripts/jquery.min.js"></script>
+  <script src="/static/javascripts/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="/static/stylesheets/bootstrap.min.css">
+  <link rel='stylesheet' href='/static/stylesheets/index.css'>
+  <script defer="true">
+    $.ajax({
+      method: 'POST',
+      url: '/api/search',
+      data: {
+        value: "{{ value }}"
+      }
+    }).done(msg => {
+      console.log(msg.result)
+      msg.result.forEach(ele => {
+        var div = $('<div>', {
+          class: "brand"
+        }).append($('<h4>').html(ele.mid)).append()
+        var row = $('<div>', {
+          class: "row"
+        })
+        ele.data.forEach(ele_ => {
+          row.append($('<div>', {
+            class: "col"
+          }).append($('<img>', {
+            src: ele_.image_url,
+            class: "card"
+          })).append($('<h5>', {
+            class: "text-center pt-2"
+          }).html(ele_.title)).append($('<h6>', {
+            class: "text-center"
+          }).html(ele_.price)))
+        })
+        $('div#main').append(div.append(row))
+      });
+    })
+  </script>
+</head>
+
+<body>
+  <div class="sticky-top container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-light row">
+      <a class="navbar-brand col" href="/"><img class="img-fluid" src="/static/images/logo.png" alt=""></a>
+      <form action="/search" method="GET" class="input-group col-6 align-items-end">
+        <input id="searchbox" class="form-control text-light" type="search" aria-label="Search" name="value" value="{{ value }}">
+        <select class="form-control col-2 text-light" style="text-align-last: center;" id="searchcata">
+          <option>類別</option>
+          <option>手機</option>
+          <option>筆電</option>
+          <option>電玩</option>
+          <option>相機</option>
+        </select>
+        <div class="input-group-append">
+          <button id="searchbtn" class="btn btn-dark" type="submit"><img class="w-50" src="/static/images/search.png"
+              alt=""></button>
+        </div>
+      </form>
+      <div class="col d-flex justify-content-end h-100">
+        <h4 class="inline-flex">您好，{{nickname}}
+          {% if logged %}
+          <script>
+            var logout = () => {
+              $.ajax({
+                url: '/logout'
+              }).done(() => {
+                window.location.href = '/'
+              })
+            }
+          </script>
+          <a href="#" onclick="logout()">登出</a>
+          {% else %}
+          <a href="/login">登入</a>
+          {%endif%}
+        </h4>
+      </div>
+    </nav>
+  </div>
+  <div id="main" class="container-fluid">
+
+  </div>
+</body>
+
+</html>

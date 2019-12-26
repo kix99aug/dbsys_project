@@ -1,0 +1,68 @@
+body {
+  background : url('/static/images/bg.png'),rgba(200, 200, 200, 0.37);
+}
+
+nav{
+  background: url("/static/images/nav_bg.png");
+  height: 200px;
+}
+
+nav .container{
+  background: url("/static/images/bg.jpg");
+  left: 0;
+  top:0;
+  position: sticky;
+  background-size:cover;
+  width: 100%;
+  height: 100%;
+  max-height: 200px;
+  z-index: -10000;
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+
+#searchbox , #searchcata , #searchbtn {
+  height: 7.5vh;
+  background:rgba(187, 166, 166, 0.75);
+  border: 3px rgba(255, 255, 255, 0.75) solid;
+}
+
+#searchbox {
+  border-right:0 ;
+  border-radius: 50px 0 0 50px;
+}
+
+#searchcata {
+  border-left: 0;
+  border-right: 0;
+}
+
+#searchbtn {
+  border-left: 0;
+  border-radius: 0 50px 50px 0;
+}
+
+#main {
+  color :black;
+  padding: 0 2vw;
+}
+
+#main > .brand {
+  padding: 2vh 0;
+  border-bottom: 5px black dashed;
+}
+
+#main > .brand:last-child {
+  border-bottom: 0;
+}
+
+#main >.brand> .row > .col > .card{
+  width: 150px;
+  height: 150px;
+  border:1px black dashed;
+  background: none;
+  margin: auto;
+}

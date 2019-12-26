@@ -1,0 +1,22 @@
+body {
+  background: url("/static/images/bokeh.jpg");
+  background-size: cover;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+#box {
+  background: rgba(64,64,64,0.75);
+  width: 50vw;
+  border-radius: 10px;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.btn {
+  width: 20vw;
+}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>註冊 - COMPARE</title>
+  <script src="/static/javascripts/jquery.min.js"></script>
+  <script src="/static/javascripts/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="/static/stylesheets/bootstrap.min.css">
+  <link rel='stylesheet' href='/static/stylesheets/register.css'>
+</head>
+
+<body>
+  <div class="alert fixed-top alert-success m-5 d-none" role="alert">
+    註冊成功! 三秒鐘後跳轉首頁
+  </div>
+  <div class="alert fixed-top alert-danger m-5 d-none" role="alert">
+    註冊失敗! 請檢查是否輸入正確，或是Email已有人使用
+  </div>
+  <div id="box" class="container-fluid">
+    <img src="/static/images/logo.png" alt="">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Email</span>
+      </div>
+      <input name="email" type="text" class="form-control">
+    </div>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Nickname</span>
+      </div>
+      <input name="nickname" type="text" class="form-control">
+    </div>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Password</span>
+      </div>
+      <input name="password" type="password" class="form-control">
+    </div>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Password Check</span>
+      </div>
+      <input name="password_check" type="password" class="form-control">
+    </div>
+    <button type="button" class="btn btn-primary btn-block" id="register">註冊</button>
+  </div>
+  <script>
+    $('button#register').click(evt => {
+      $.ajax({
+        method: "POST",
+        url: "/api/register",
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          email: $("input[name='email']").val(),
+          nickname: $("input[name='nickname']").val(),
+          password: $("input[name='password']").val(),
+          password_check: $("input[name='password_check']").val()
+        }
+      }).done(msg => {
+        if (msg.success) {
+          $('.alert-success').removeClass('d-none')
+          setTimeout(() => {
+            window.location.href = "/"
+          }, 3000)
+        } else {
+          $('.alert-danger').removeClass('d-none')
+          setTimeout(() => {
+            $('.alert-danger').addClass('d-none')
+          }, 3000)
+        }
+      })
+    })
+  </script>
+</body>
+
+</html>

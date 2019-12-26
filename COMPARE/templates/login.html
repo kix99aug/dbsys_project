@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>登入 - COMPARE</title>
+  <script src="/static/javascripts/jquery.min.js"></script>
+  <script src="/static/javascripts/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="/static/stylesheets/bootstrap.min.css">
+  <link rel='stylesheet' href='/static/stylesheets/login.css'>
+</head>
+
+<body>
+  <div class="alert fixed-top alert-success m-5 d-none" role="alert">
+    登入成功! 三秒鐘後跳轉首頁
+  </div>
+  <div class="alert fixed-top alert-danger m-5 d-none" role="alert">
+    登入失敗! 請檢查帳號密碼是否正確，若無帳號請先註冊
+  </div>
+  <div id="box" class="container-fluid">
+    <img src="/static/images/logo.png" alt="">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Email</span>
+      </div>
+      <input name="email" type="text" class="form-control">
+    </div>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Password</span>
+      </div>
+      <input name="password" type="password" class="form-control">
+    </div>
+    <div class="input-group d-flex justify-content-center">
+      <div class="input-group-prepend">
+        <button type="button" class="btn btn-success btn-lg" id="login">登入</button>
+      </div>
+      <div class="input-group-append">
+        <button type="button" class="btn btn-secondary btn-lg" id="register">註冊</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    $('button#login').click(evt=>{
+      $.ajax({
+        method: "POST",
+        url:"/api/login",
+        data:{
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          email:$("input[name='email']").val(),
+          password:$("input[name='password']").val()
+        }
+      }).done(msg=>{
+        if(msg.result){
+          $('.alert-success').removeClass('d-none')
+          setTimeout(()=>{
+            window.location.href = "/"
+          },3000)
+        } else {
+          $('.alert-danger').removeClass('d-none')
+          setTimeout(() => {
+            $('.alert-danger').addClass('d-none')
+          }, 3000)
+        }
+      })
+    })
+    $('button#register').click(evt=>{
+      window.location.href = "/register"
+    })
+  </script>
+</body>
+
+</html>
