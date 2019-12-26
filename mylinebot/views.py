@@ -54,7 +54,9 @@ def callback(request):
                             columns = []
                             for i in range(len(data)):
                                 if i >= 3: break
-                                columns.append(CarouselColumn(thumbnail_image_url=data[i]['image_url'], title=data[i]['title'], text='$'+str(
+                                title = str(data[i]['title'])
+                                if len(title)>20:title = title[0:20]
+                                columns.append(CarouselColumn(thumbnail_image_url=data[i]['image_url'], title=title, text='$'+str(
                                     data[i]['price']), actions=[URITemplateAction(label='前往購買', uri=data[i]['url'])]))
                             line_bot_api.push_message(
                                 event.source.user_id,
