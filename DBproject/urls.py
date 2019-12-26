@@ -21,6 +21,9 @@ from COMPARE import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index),
+
+    path('mylinebot/', include('mylinebot.urls')),
+
     path('search', views.search),
     path('login', views.login),
     path('logout', views.logout),
