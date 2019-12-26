@@ -32,7 +32,7 @@ def callback(request):
 
         for event in events:
             if isinstance(event, MessageEvent):
-                url = '/api/search'
+                url = 'http://localhost:8000/api/search'
                 str_list = []
                 d = { "value" : event.message.text}
                 r = requests.post(url, data=d)
