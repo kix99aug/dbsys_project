@@ -177,6 +177,67 @@ class Shopee(models.Model):
         db_table = 'shopee'
 
 
+class SocialAuthAssociation(models.Model):
+    server_url = models.CharField(max_length=255)
+    handle = models.CharField(max_length=255)
+    secret = models.CharField(max_length=255)
+    issued = models.IntegerField()
+    lifetime = models.IntegerField()
+    assoc_type = models.CharField(max_length=64)
+
+    class Meta:
+        managed = False
+        db_table = 'social_auth_association'
+        unique_together = (('server_url', 'handle'),)
+
+
+class SocialAuthCode(models.Model):
+    email = models.CharField(max_length=254)
+    code = models.CharField(max_length=32)
+    verified = models.BooleanField()
+    timestamp = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'social_auth_code'
+        unique_together = (('email', 'code'),)
+
+
+class SocialAuthNonce(models.Model):
+    server_url = models.CharField(max_length=255)
+    timestamp = models.IntegerField()
+    salt = models.CharField(max_length=65)
+
+    class Meta:
+        managed = False
+        db_table = 'social_auth_nonce'
+        unique_together = (('server_url', 'timestamp', 'salt'),)
+
+
+class SocialAuthPartial(models.Model):
+    token = models.CharField(max_length=32)
+    next_step = models.PositiveSmallIntegerField()
+    backend = models.CharField(max_length=32)
+    data = models.TextField()
+    timestamp = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'social_auth_partial'
+
+
+class SocialAuthUsersocialauth(models.Model):
+    provider = models.CharField(max_length=32)
+    uid = models.CharField(max_length=255)
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    extra_data = models.TextField()
+
+    class Meta:
+        managed = False
+        db_table = 'social_auth_usersocialauth'
+        unique_together = (('provider', 'uid'),)
+
+
 class User(models.Model):
     email = models.TextField(unique=True, blank=True, null=True)
     password = models.TextField(blank=True, null=True)
