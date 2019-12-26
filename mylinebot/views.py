@@ -113,7 +113,7 @@ def callback(request):
                     myid = event.source.user_id
                     vvalue = {}
                     vvalue['stage']:1
-                    vvalue['time']:str(datetime.datetime.utcnow().strftime("%m%d"))
+                    # vvalue['time']:str(datetime.datetime.utcnow().strftime("%m%d"))
                     user_stage[myid]:vvalue
                     url = 'http://localhost:8000/api/search'
                     str_list = []
