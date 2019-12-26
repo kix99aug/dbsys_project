@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.db import connection
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse,HttpResponseRedirect
 from django.core import serializers
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
 import hashlib
+import json,string,random
 
 
 def hash_code(s, salt='ivan'):  # 密碼加密
@@ -12,7 +13,6 @@ def hash_code(s, salt='ivan'):  # 密碼加密
     s = s + salt
     h.update(s.encode())
     return h.hexdigest()
-
 
 # def index(request):
 #     if 'session' in request:
@@ -39,6 +39,10 @@ def index(request):
         logged = False
     return render(request, 'index.html', {'nickname': nickname, 'logged': logged})
 
+def randomString(stringLength=10):
+    """Generate a random string of fixed length """
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(stringLength))
 
 def search(request):
     if 'session' in request:
@@ -117,6 +121,18 @@ def api_login(request):
         except:
             return JsonResponse({'result': False})
 
+@csrf_exempt
+def github_callback(request):
+    git_user = SocialAuthUsersocialauth.objects.raw('SELECT * from social_auth_usersocialauth where user_id="{0}"'.format(request.session['_auth_user_id']))
+    if not User.objects.filter(email = git_user[0].uid).exists():
+        r = json.loads(git_user[0].extra_data)
+        User.objects.create(email=git_user[0].uid, password=randomString(), nickname=r['login'])
+    else:
+        user = User.objects.get(email=git_user[0].uid)
+        request.session['email'] = user.email
+        request.session['nickname'] = user.nickname
+    return HttpResponseRedirect('/')
+
 
 @csrf_exempt
 def api_register(request):
@@ -156,6 +172,7 @@ def api_comment_add(request):
                 result.append(
                     {'id': comment.id, 'uid': comment.uid, 'mid': comment.mid, 'content':  comment.content})
             return JsonResponse(result, safe=False, json_dumps_params={'ensure_ascii': False})
+
 
 
 @csrf_exempt

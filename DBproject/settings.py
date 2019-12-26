@@ -37,7 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django.contrib.sites",
+    "django.contrib.redirects",
     'COMPARE',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +50,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -63,6 +67,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends', 
+                'social_django.context_processors.login_redirect', 
             ],
         },
     },
@@ -123,3 +129,20 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'COMPARE/templates/static'),
 ]
+
+
+
+
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+) 
+SOCIAL_AUTH_URL_NAMESPACE = 'social' 
+
+SOCIAL_AUTH_GITHUB_KEY = '4b70d8d8ff98234c2b80'
+SOCIAL_AUTH_GITHUB_SECRET = '750b8e6323745f59e7d95ff79bde80a3a54b08c4'
+SOCIAL_AUTH_GITHUB_USE_OPENID_AS_USERNAME = True
+SOCIAL_AUTH_GITHUB_SCOPE =['']
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/github/callback' # 登陸成功之後的路由
