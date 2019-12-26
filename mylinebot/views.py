@@ -49,71 +49,71 @@ def callback(request):
                     for i in user_stage:    #如果之前傳過 先找到他在哪
                         if i == event.source.user_id:
                             index = i[event.source.user_id]
-                            todate = str(datetime.datetime.utcnow().strftime("%m%d"))
-                            if index['time'] == todate:    #如果時間是今天
-                                if index['stage'] ==1:    #且stage等於1
-                                    url = 'http://localhost:8000/api/search'
-                                    str_list = []
-                                    output = ""
-                                    d = {"value": index['search']}
-                                    r = requests.post(url, data=d)
-                                    data = r.json()
-                                    if len(data['result']) != 0:
-                                        j = data['result'][event.message.text]
-                                        for k in j['data']:
-                                            string = k['title'] +'\n' + k['price'] + '\n' + k['url'] + '\n'
-                                            if (len(output)+len(string) < 700):
-                                                output += string
-                                            else:
-                                                line_bot_api.push_message(
-                                                    event.source.user_id,
-                                                    TextSendMessage(text=output)
-                                                )
-                                                output = string
-                                            count = count + 1
+                            # todate = str(datetime.datetime.utcnow().strftime("%m%d"))
+                            # if index['time'] == todate:    #如果時間是今天
+                            # if index['stage'] ==1:    #且stage等於1
+                            url = 'http://localhost:8000/api/search'
+                            str_list = []
+                            output = ""
+                            d = {"value": index['search']}
+                            r = requests.post(url, data=d)
+                            data = r.json()
+                            if len(data['result']) != 0:
+                                j = data['result'][event.message.text]
+                                for k in j['data']:
+                                    string = k['title'] +'\n' + k['price'] + '\n' + k['url'] + '\n'
+                                    if (len(output)+len(string) < 700):
+                                        output += string
+                                    else:
                                         line_bot_api.push_message(
                                             event.source.user_id,
                                             TextSendMessage(text=output)
                                         )
-                                        del user_stage[event.source.user_id]
+                                        output = string
+                                    count = count + 1
+                                line_bot_api.push_message(
+                                    event.source.user_id,
+                                    TextSendMessage(text=output)
+                                )
+                                del user_stage[event.source.user_id]
                                     
-                            else:    #如果不是今天
-                                myid = event.source.user_id
-                                vvalue = {}
-                                vvalue['stage']:1
-                                vvalue['time']:str(datetime.datetime.utcnow().strftime("%m%d"))
-                                vvalue['search']:event.message.text
-                                user_stage[event.source.user_id]:vvalue
-                                url = 'http://localhost:8000/api/search'
-                                str_list = []
-                                output = ""
-                                d = {"value": event.message.text}
-                                r = requests.post(url, data=d)
-                                data = r.json()
-                                if len(data['result']) != 0:
-                                    count = 1
-                                    for j in data['result']:
-                                        string = str(count) +" :" + j['model'] + '\n'
-                                        if (len(output)+len(string) < 500):
-                                            output += string
-                                        else:
-                                            line_bot_api.push_message(
-                                                event.source.user_id,
-                                                TextSendMessage(text=output)
-                                            )
-                                            output = string
-                                        count = count + 1
-                                    line_bot_api.push_message(
-                                        event.source.user_id,
-                                        TextSendMessage(text=output)
-                                    )
+                            # else:    #如果不是今天
+                            #     myid = event.source.user_id
+                            #     vvalue = {}
+                            #     vvalue['stage']:1
+                            #     vvalue['time']:str(datetime.datetime.utcnow().strftime("%m%d"))
+                            #     vvalue['search']:event.message.text
+                            #     user_stage[event.source.user_id]:vvalue
+                            #     url = 'http://localhost:8000/api/search'
+                            #     str_list = []
+                            #     output = ""
+                            #     d = {"value": event.message.text}
+                            #     r = requests.post(url, data=d)
+                            #     data = r.json()
+                            #     if len(data['result']) != 0:
+                            #         count = 1
+                            #         for j in data['result']:
+                            #             string = str(count) +" :" + j['model'] + '\n'
+                            #             if (len(output)+len(string) < 500):
+                            #                 output += string
+                            #             else:
+                            #                 line_bot_api.push_message(
+                            #                     event.source.user_id,
+                            #                     TextSendMessage(text=output)
+                            #                 )
+                            #                 output = string
+                            #             count = count + 1
+                            #         line_bot_api.push_message(
+                            #             event.source.user_id,
+                            #             TextSendMessage(text=output)
+                            #         )
                         else: 
                             continue
                 else:
                     myid = event.source.user_id
                     vvalue = {}
                     vvalue['stage']:1
-                    vvalue['time']:str(datetime.datetime.utcnow().strftime("%m%d"))
+                    # vvalue['time']:str(datetime.datetime.utcnow().strftime("%m%d"))
                     user_stage[myid]:vvalue
                     url = 'http://localhost:8000/api/search'
                     str_list = []
