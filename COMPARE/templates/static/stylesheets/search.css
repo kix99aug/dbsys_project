@@ -2,6 +2,11 @@ body {
   background : url('/static/images/bg.png'),rgba(200, 200, 200, 0.37);
 }
 
+div.navDiv {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
 nav{
   background: url("/static/images/nav_bg.png");
   height: 200px;

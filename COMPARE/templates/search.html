@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>首頁 - COMPARE</title>
+  <title>{{ value }} - COMPARE</title>
   <script src="/static/javascripts/jquery.min.js"></script>
   <script src="/static/javascripts/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="/static/stylesheets/bootstrap.min.css">
@@ -20,8 +20,9 @@
         var div = $('<div>', {
           class: "card border-info m-3"
         }).append($('<h4>', {
-          class: "card-header bg-transparent border-info"
-        }).html(ele.model + ` <a href="/comment?id=${ele.mid}">評論</a>`))
+          class: "card-header bg-transparent border-info d-flex justify-content-between align-items-center"
+          
+        }).html(ele.model  + `<button class="btn btn-primary comment" data-model="${ele.model}" data-mid="${ele.mid}">評論</button>`) )
         for (let i = 0; i < ele.data.length; i++) {
           var row = $('<div>', {
             class: "card-body row"
@@ -44,23 +45,104 @@
         }
         $('div#main').append(div)
       });
+      $('button.comment').click(evt=>{
+        $('button.add').attr("data-mid",evt.target.dataset.mid)
+        $.ajax({
+          method:'POST',
+          url:'/api/comment',
+          data:{
+            mid:evt.target.dataset.mid
+          }
+        }).done(msg=>{
+            $(".modal-title").text(evt.target.dataset.model)
+            $('#discuss').empty()
+            if(msg.length == 0) $('#discuss').html("<h3 class='text-center m-5'>目前沒有評論喔😉</h3>")
+          msg.forEach(ele=>{
+            if(ele.editable) $('#discuss').append(`
+            <div data-id='${ele.id}' class="card m-2">
+              <div class="card-header d-flex justify-content-center align-items-center">
+                <div>來自 <span>${ele.nickname}</span> 的評論 </div>
+                <button class="btn btn-success edit mx-1" data-id='${ele.id}'>編輯</button> 
+                <button class="btn btn-danger delete mx-1" data-id='${ele.id}'>刪除</button>
+              </div>
+              <div data-id='${ele.id}' class="card-body d-flex flex-column align-items-end">
+                  <div class='text w-100' data-id='${ele.id}'>${ele.content}</div>
+              </div>
+            </div>
+            `)
+            else $('#discuss').append(`
+            <div class="card m-2">
+              <div class="card-header d-flex justify-content-center align-items-center">
+                <div>來自 <span>${ele.nickname}</span> 的評論</div>
+              </div>
+              <div class="card-body">
+                  <div class='text w-100'>${ele.content}</div>
+              </div>
+            </div>
+            `)
+          })
+          $('button.edit').click(evt=>{
+            let id = evt.target.dataset.id
+            let textDiv = $(`div.text[data-id="${id}"]`)
+            textDiv.replaceWith($('<textarea>',{class:"form-control","data-id":id}).text(textDiv.text()));
+            $(`.card-body[data-id="${id}"]`).append($('<button>',{class:"btn btn-primary mt-2 ml-auto save","data-id":id}).text('儲存').click(evt=>{
+              let textarea = $(`textarea[data-id="${id}"]`)
+              $.ajax({
+                method:"POST",
+                url:"/api/comment/update",
+                data:{
+                  id:id,
+                  content:textarea.val()
+                }
+              }).done(msg=>{
+                console.log(msg)
+                textarea.replaceWith($('<div>',{class:"text w-100","data-id":id}).text(textarea.val()))
+                $(`button.save[data-id="${id}"]`).remove()
+              })
+            }))
+          })
+          $('button.delete').click(evt=>{
+              let id = evt.target.dataset.id
+            $.ajax({
+              method:'POST',
+              url:'api/comment/delete',
+              data:{
+                id:id
+              }
+            }).done(msg=>{
+              $(`.card[data-id="${id}"]`).remove()
+            })
+          })
+          $('button.gogo').parent().remove()
+          $('button.add').removeClass("d-none")
+          $('.modal').modal()
+        })
+      })
+      $('button.add').click(evt=>{
+        $(evt.target).addClass("d-none")
+        $(evt.target).parent().append(`<div class="d-flex flex-column w-100 align-items-end">
+            <textarea id="newComment" class="form-control"></textarea>
+            <button class="btn btn-primary mt-1 gogo" data-mid="${evt.target.dataset.mid}">發送</button>
+            </div>`)
+        $('button.gogo').click(evt=>{
+          $.ajax({
+          method:'POST',
+          url:'/api/comment/add',
+          data:{
+            mid:evt.target.dataset.mid,
+            content:$('#newComment').val()
+          }
+        }).done(msg=>{
+          $(`button.comment[data-mid="${evt.target.dataset.mid}"]`).click()
+        })
+        })
     })
+  })
   </script>
 </head>
-<!-- <div class="card border-info m-3">
-      <h4 class="card-header bg-transparent border-info">ASUS ZENFONE 6 ZS630KL 128GB <a href="/comment?">評論</a></h4>
-      <div class="card-body row">
-        <div class="col-1">
-          <img src="https://cf.shopee.tw/file/50c14b1d45d73d0c2dd71b7f07a62a2b" class="img-fluid"></div>
-        <div class="col">
-          <h5 class="card-title"><a href="">免運費 華碩 ASUS ZenFone 6 ZS630KL 128GB 256GB 現貨當天寄出</a></h5>
-          <h5 class="card-text">$ <span>18800</span> </h5>
-        </div>
-      </div>
-    </div> -->
 
 <body>
-  <div class="sticky-top container-fluid">
+  <div class="sticky-top container-fluid navDiv">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-light row">
       <a class="navbar-brand col" href="/"><img class="img-fluid" src="/static/images/logo.png" alt=""></a>
       <form action="/search" method="GET" class="input-group col-6 align-items-end">
@@ -99,6 +181,24 @@
     </nav>
   </div>
   <div id="main" class="container-fluid">
+    <div class="modal modal-lg " tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+    {% if logged %} 
+    <div class="d-flex w-100 justify-content-end px-2"><button class="btn btn-primary add">新增評論</button></div>
+    {%endif%}
+    <div id="discuss"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </body>
 

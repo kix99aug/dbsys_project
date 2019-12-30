@@ -49,18 +49,6 @@ def login(request):
 def register(request):
     return render(request, 'register.html')
 
-
-def comment(request):
-    with connection.cursor() as c:
-        m = Merchandise.objects.raw("SELECT model,id from Merchandise WHERE id={}".format(request.GET['id']))
-        mm = m[0].model
-        mId = m[0].id
-        u = User.objects.raw("SELECT id from User")
-        userId = u[0].id
-        d = Discuss.objects.raw("SELECT id,uid,content from Discuss")
-        return render(request, 'comment.html', {'Mmodel': mm, 'D': d})
-
-
 @csrf_exempt
 def api_search(req):
     if req.method == 'POST':
@@ -84,8 +72,6 @@ def api_search(req):
                 'data': data
             })
         return JsonResponse({'result': result})
-
-#data['result'].length == 0
 
 @csrf_exempt
 def api_login(request):
@@ -144,6 +130,22 @@ def api_register(request):
             return JsonResponse({'success': False})
 
 
+
+@csrf_exempt
+def api_comment(request):
+    if request.method == "POST":
+        with connection.cursor() as c:
+            if 'email' in request.session:
+                userId = User.objects.raw('SELECT * FROM User WHERE email="{0}"'.format(request.session['email']))[0].id
+            else:
+                userId = 0
+            discuss = Discuss.objects.raw("SELECT Discuss.id as id,Discuss.uid as uid ,User.nickname as nickname,Discuss.mid as mid ,Discuss.content as content FROM Discuss,User where Discuss.mid='{0}' and Discuss.uid=User.id ORDER BY Discuss.id DESC".format(request.POST['mid']))
+            result = []
+            for comment in discuss:
+                result.append(
+                    {'id': comment.id, 'nickname': comment.nickname, 'mid': comment.mid, 'content':  comment.content,'editable':comment.uid==userId})
+            return JsonResponse(result, safe=False, json_dumps_params={'ensure_ascii': False})
+
 @csrf_exempt
 def api_comment_add(request):
     if request.method == "POST":
@@ -152,14 +154,8 @@ def api_comment_add(request):
             userId = User.objects.raw(
                 'SELECT * FROM User WHERE email="{0}"'.format(request.session['email']))[0].id
             cursor.execute("INSERT INTO Discuss(uid, mid, content) VALUES ('{0}','{1}','{2}')".format(
-                userId, 40, content))
-            discuss = Discuss.objects.raw(
-                "SELECT id,uid,mid,content FROM Discuss")
-            result = []
-            for comment in discuss:
-                result.append(
-                    {'id': comment.id, 'uid': comment.uid, 'mid': comment.mid, 'content':  comment.content})
-            return JsonResponse(result, safe=False, json_dumps_params={'ensure_ascii': False})
+                userId, request.POST['mid'], content))
+            return JsonResponse({'result': True}, safe=False, json_dumps_params={'ensure_ascii': False})
 
 
 
