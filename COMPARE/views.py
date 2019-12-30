@@ -151,11 +151,13 @@ def api_comment_add(request):
     if request.method == "POST":
         with connection.cursor() as cursor:
             content = request.POST['content']
-            userId = User.objects.raw(
-                'SELECT * FROM User WHERE email="{0}"'.format(request.session['email']))[0].id
+            if 'email' in request.session:
+                userId = User.objects.raw(
+                    'SELECT * FROM User WHERE email="{0}"'.format(request.session['email']))[0].id
+            else: return JsonResponse({'result': False})
             cursor.execute("INSERT INTO Discuss(uid, mid, content) VALUES ('{0}','{1}','{2}')".format(
                 userId, request.POST['mid'], content))
-            return JsonResponse({'result': True}, safe=False, json_dumps_params={'ensure_ascii': False})
+            return JsonResponse({'result': True})
 
 
 
